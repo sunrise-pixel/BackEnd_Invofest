@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model CategoryEvent {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  events      Event[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Pembicara {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String
+  email     String
+  bio       String?
+  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id             Int          @id @default(autoincrement())
+  title          String
+  description    String
+  date           DateTime
+  location       String
+  categoryId     Int
+  category       CategoryEvent @relation(fields: [categoryId], references: [id])
+  pembicaraId    Int
+  pembicara      Pembicara    @relation(fields: [pembicaraId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
