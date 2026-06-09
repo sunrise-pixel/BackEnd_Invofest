@@ -257,7 +257,7 @@ PORT=3001
 
 ## 📝 Lisensi
 
-Hak Cipta © 2026 - Giska Aura Muhamad Prasetyo
+Hak Cipta © 2026 - Maula adiba mufadol
 
 ## Expanding the ESLint configuration
 
