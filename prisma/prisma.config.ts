@@ -1,5 +1,9 @@
 import path from 'path';
-import { defineConfig } from '@prisma/client/config';
+import { fileURLToPath } from 'url';
+import { defineConfig } from '@prisma/client/config'; 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   earlyAccess: true,
