@@ -17,9 +17,12 @@ router.get("/", async (_req: Request, res: Response) => {
         bio: p.bio,
       }))
     );
-  } catch {
-    res.status(500).json({ error: "Failed to fetch pembicara" });
-  }
+  } catch (error) {
+  console.error(error);
+  res.status(500).json({
+    error,
+  });
+}
 });
 
 // GET BY ID
