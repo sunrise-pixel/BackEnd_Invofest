@@ -1,72 +1,106 @@
-import { Router, Request, Response } from 'express';
-import prisma from '../db.js';
+import { Router, Request, Response } from "express";
+import prisma from "../db.js";
 
 const router = Router();
 
-// GET all pembicara
-router.get('/', async (req: Request, res: Response) => {
+// GET ALL
+router.get("/", async (_req: Request, res: Response) => {
   try {
     const pembicara = await prisma.pembicara.findMany();
-    res.json(pembicara);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch pembicara' });
+
+    res.json(
+      pembicara.map((p) => ({
+        id: p.id,
+        nama: p.name,
+        role: p.role,
+        imageUrl: p.email,
+        bio: p.bio,
+      }))
+    );
+  } catch {
+    res.status(500).json({ error: "Failed to fetch pembicara" });
   }
 });
 
-// GET single pembicara
-router.get('/:id', async (req: Request, res: Response) => {
+// GET BY ID
+router.get("/:id", async (req: Request, res: Response) => {
   try {
-    const id = String(req.params.id);
+    const id = Number(req.params["id"]);
+
     const pembicara = await prisma.pembicara.findUnique({
-      where: { id: parseInt(id) },
+      where: { id },
     });
+
     if (!pembicara) {
-      return res.status(404).json({ error: 'Pembicara not found' });
+      return res.status(404).json({ error: "Pembicara not found" });
     }
-    res.json(pembicara);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch pembicara' });
+
+    res.json({
+      id: pembicara.id,
+      nama: pembicara.name,
+      role: pembicara.role,
+      imageUrl: pembicara.email,
+      bio: pembicara.bio,
+    });
+  } catch {
+    res.status(500).json({ error: "Failed to fetch pembicara" });
   }
 });
 
-// POST create pembicara
-router.post('/', async (req: Request, res: Response) => {
+// POST
+router.post("/", async (req: Request, res: Response) => {
   try {
-    const { name, role, email, bio } = req.body;
+    const { nama, role, imageUrl, bio } = req.body;
+
     const pembicara = await prisma.pembicara.create({
-      data: { name, role, email, bio },
+      data: {
+        name: nama,
+        role,
+        email: imageUrl,
+        bio,
+      },
     });
+
     res.status(201).json(pembicara);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create pembicara' });
+  } catch {
+    res.status(500).json({ error: "Failed to create pembicara" });
   }
 });
 
-// PUT update pembicara
-router.put('/:id', async (req: Request, res: Response) => {
+// PUT
+router.put("/:id", async (req: Request, res: Response) => {
   try {
-    const id = String(req.params.id);
-    const { name, role, email, bio } = req.body;
+    const id = Number(req.params["id"]);
+    const { nama, role, imageUrl, bio } = req.body;
+
     const pembicara = await prisma.pembicara.update({
-      where: { id: parseInt(id) },
-      data: { name, role, email, bio },
+      where: { id },
+      data: {
+        name: nama,
+        role,
+        email: imageUrl,
+        bio,
+      },
     });
+
     res.json(pembicara);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update pembicara' });
+  } catch {
+    res.status(500).json({ error: "Failed to update pembicara" });
   }
 });
 
-// DELETE pembicara
-router.delete('/:id', async (req: Request, res: Response) => {
+// DELETE
+router.delete("/:id", async (req: Request, res: Response) => {
   try {
-    const id = String(req.params.id);
+    const id = Number(req.params["id"]);
+
     await prisma.pembicara.delete({
-      where: { id: parseInt(id) },
+      where: { id },
     });
+
     res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete pembicara' });
+  } catch {
+    res.status(500).json({ error: "Failed to delete pembicara" });
   }
 });
 
