@@ -3,7 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model CategoryEvent {
@@ -27,15 +28,18 @@ model Pembicara {
 }
 
 model Event {
-  id             Int          @id @default(autoincrement())
-  title          String
-  description    String
-  date           DateTime
-  location       String
-  categoryId     Int
-  category       CategoryEvent @relation(fields: [categoryId], references: [id])
-  pembicaraId    Int
-  pembicara      Pembicara    @relation(fields: [pembicaraId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  date        DateTime
+  location    String
+
+  categoryId Int
+  category CategoryEvent @relation(fields: [categoryId], references: [id])
+
+  pembicaraId Int
+  pembicara Pembicara @relation(fields: [pembicaraId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
